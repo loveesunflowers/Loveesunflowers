@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveSunflowers - AI Creative Writing Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #FFD700;
+            --dark-gold: #D4AF37;
+            --sunflower: #FFC107;
+            --petal: #FFE082;
+            --stem: #689F38;
+            --dark-green: #1B5E20;
+            --light-cream: #FFF9E6;
+            --dark-brown: #5D4037;
+            --light-brown: #8D6E63;
+            --shadow: rgba(93, 64, 55, 0.2);
+            --bg-primary: #FFF9E6;
+            --bg-secondary: white;
+            --text-primary: #5D4037;
+            --text-secondary: #1B5E20;
+            --border-color: #FFE082;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        .dark-mode {
+            --bg-primary: #1A1A2E;
+            --bg-secondary: #16213E;
+            --text-primary: #F0F0F0;
+            --text-secondary: #FFD700;
+            --border-color: #D4AF37;
+            --card-bg: rgba(26, 26, 46, 0.9);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .floral-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.15;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,0 C77.614,0 100,22.386 100,50 C100,77.614 77.614,100 50,100 C22.386,100 0,77.614 0,50 C0,22.386 22.386,0 50,0 Z M50,85 C68.225,85 83,70.225 83,52 C83,33.775 68.225,19 50,19 C31.775,19 17,33.775 17,52 C17,70.225 31.775,85 50,85 Z M50,70 C59.389,70 67,62.389 67,53 C67,43.611 59.389,36 50,36 C40.611,36 33,43.611 33,53 C33,62.389 40.611,70 50,70 Z'%3E%3C/path%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath fill='%23FFE082' d='M100,0 C155.228,0 200,44.772 200,100 C200,155.228 155.228,200 100,200 C44.772,200 0,155.228 0,100 C0,44.772 44.772,0 100,0 Z M100,170 C138.66,170 170,138.66 170,100 C170,61.34 138.66,30 100,30 C61.34,30 30,61.34 30,100 C30,138.66 61.34,170 100,170 Z M100,140 C122.091,140 140,122.091 140,100 C140,77.909 122.091,60 100,60 C77.909,60 60,77.909 60,100 C60,122.091 77.909,140 100,140 Z'%3E%3C/path%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 150'%3E%3Cpath fill='%23FFC107' d='M75,0 C116.421,0 150,33.579 150,75 C150,116.421 116.421,150 75,150 C33.579,150 0,116.421 0,75 C0,33.579 33.579,0 75,0 Z M75,120 C99.853,120 120,99.853 120,75 C120,50.147 99.853,30 75,30 C50.147,30 30,50.147 30,75 C30,99.853 50.147,120 75,120 Z M75,90 C83.284,90 90,83.284 90,75 C90,66.716 83.284,60 75,60 C66.716,60 60,66.716 60,75 C60,83.284 66.716,90 75,90 Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 100px, 200px, 150px;
+            background-position: 10% 20%, 90% 80%, 50% 40%;
+            background-repeat: no-repeat;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--sunflower) 100%);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.4) 10px, transparent 40px),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.4) 15px, transparent 50px);
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--dark-brown);
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--dark-brown);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .theme-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--dark-green);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--gold);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .tabs-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 15px;
+            background: linear-gradient(to right, #8C6E63, #5D4037);
+        }
+        
+        .tab-btn {
+            padding: 12px 25px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab-btn:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+        
+        .tab-btn.active {
+            background: var(--gold);
+            color: var(--dark-brown);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        .tab-content {
+            display: none;
+            background: var(--bg-secondary);
+            border-radius: 0 0 16px 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: rgba(255, 224, 130, 0.1);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+            background: var(--card-bg);
+        }
+        
+        .btn {
+            padding: 16px 32px;
+            background: linear-gradient(to right, var(--gold), var(--sunflower));
+            color: var(--dark-brown);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        .continue-btn {
+            padding: 10px 20px;
+            background: var(--stem);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .continue-btn:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+        }
+        
+        .output-container {
+            margin-top: 30px;
+            background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .output-title {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .output-content {
+            min-height: 200px;
+            padding: 20px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            white-space: pre-wrap;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .copy-btn, .download-btn, .audio-btn {
+            padding: 10px 20px;
+            background: var(--stem);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .download-btn {
+            background: var(--dark-green);
+        }
+        
+        .audio-btn {
+            background: var(--dark-gold);
+        }
+        
+        .copy-btn:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+        }
+        
+        .download-btn:hover {
+            background: var(--stem);
+            transform: translateY(-2px);
+        }
+        
+        .audio-btn:hover {
+            background: var(--gold);
+            transform: translateY(-2px);
+            color: var(--dark-brown);
+        }
+        
+        .settings-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, var(--gold), var(--dark-gold));
+            color: var(--dark-brown);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .settings-btn:hover {
+            transform: rotate(45deg) scale(1.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--bg-secondary);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
+            border: 2px solid var(--gold);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        
+        .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: rgba(255, 224, 130, 0.2);
+            border-radius: 50px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .loader-dot {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--gold);
+            margin: 0 6px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        .loader-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .loader-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .sunflower-icon {
+            display: inline-block;
+            margin: 0 5px;
+            color: var(--sunflower);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .special-section {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #FFECB3 100%);
+            border: 2px solid var(--gold);
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .audio-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+        
+        .floral-element {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--sunflower) 40%, var(--gold) 65%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--sunflower);
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .floral-element:nth-child(1) {
+            top: 20%;
+            left: 5%;
+            animation-delay: 0s;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .floral-element:nth-child(2) {
+            top: 60%;
+            right: 5%;
+            animation-delay: 2s;
+            width: 120px;
+            height: 120px;
+        }
+        
+        .floral-element:nth-child(3) {
+            bottom: 20%;
+            left: 10%;
+            animation-delay: 4s;
+            width: 60px;
+            height: 60px;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        .floral-pattern {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background-image: 
+                radial-gradient(circle, transparent 30%, var(--gold) 31%, var(--gold) 40%, transparent 41%),
+                repeating-conic-gradient(var(--petal) 0deg 10deg, transparent 10deg 20deg);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: rotate 30s linear infinite;
+            z-index: -1;
+        }
+        
+        .floral-pattern:nth-child(1) {
+            top: 10%;
+            right: 10%;
+        }
+        
+        .floral-pattern:nth-child(2) {
+            bottom: 10%;
+            left: 10%;
+            animation-direction: reverse;
+            animation-duration: 40s;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .audio-library {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="floral-bg"></div>
+    <div class="floral-pattern"></div>
+    <div class="floral-pattern"></div>
+    <div class="floral-element"></div>
+    <div class="floral-element"></div>
+    <div class="floral-element"></div>
+    
+    <div class="container">
+        <header>
+            <div class="theme-switch">
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <h1><i class="fas fa-sun"></i> LoveSunflowers</h1>
+            <p class="tagline">AI-Powered Creative Writing Studio - Blossom Your Words</p>
+        </header>
+        
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="poem"><i class="fas fa-feather-alt"></i> Poem</button>
+                <button class="tab-btn" data-tab="monologue"><i class="fas fa-microphone"></i> Monologue</button>
+                <button class="tab-btn" data-tab="dialogue"><i class="fas fa-comments"></i> Dialogue</button>
+                <button class="tab-btn" data-tab="passions"><i class="fas fa-heart"></i> Blossoming Passions</button>
+                <button class="tab-btn" data-tab="audio"><i class="fas fa-music"></i> Audio Library</button>
+            </div>
+            
+            <div class="tab-content active" id="poem">
+                <h2 class="tab-title"><i class="fas fa-feather-alt"></i> Poem Generator</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="poem-theme"><i class="fas fa-pencil-alt"></i> Theme/Topic</label>
+                        <input type="text" id="poem-theme" placeholder="e.g., love, the ocean, loss">
+                    </div>
+                    <div class="form-group">
+                        <label for="poem-form"><i class="fas fa-shapes"></i> Poetry Form</label>
+                        <select id="poem-form">
+                            <option value="sonnet">Sonnet</option>
+                            <option value="haiku">Haiku</option>
+                            <option value="free verse">Free Verse</option>
+                            <option value="limerick">Limerick</option>
+                            <option value="ode">Ode</option>
+                            <option value="acrostic">Acrostic</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="poem-tone"><i class="fas fa-music"></i> Tone</label>
+                        <select id="poem-tone">
+                            <option value="romantic">Romantic</option>
+                            <option value="melancholic">Melancholic</option>
+                            <option value="joyful">Joyful</option>
+                            <option value="dark">Dark</option>
+                            <option value="whimsical">Whimsical</option>
+                            <option value="epic">Epic</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="poem-rhyme"><i class="fas fa-assistive-listening-systems"></i> Rhyme Scheme</label>
+                        <select id="poem-rhyme">
+                            <option value="rhyming">Rhyming</option>
+                            <option value="non-rhyming">Non-Rhyming</option>
+                            <option value="mixed">Mixed</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="poem-length"><i class="fas fa-ruler"></i> Length: <span id="length-value" class="slider-value">Medium</span></label>
+                    <div class="slider-container">
+                        <span>Short</span>
+                        <input type="range" id="poem-length" min="1" max="3" value="2" step="1">
+                        <span>Long</span>
+                    </div>
+                </div>
+                
+                <div class="language-toggle">
+                    <span><i class="fas fa-globe"></i> Language: English</span>
+                    <label class="switch">
+                        <input type="checkbox" id="poem-language">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Hindi <i class="fas fa-language"></i></span>
+                </div>
+                
+                <center>
+                    <button class="btn" id="generate-poem"><i class="fas fa-magic"></i> Compose Poem</button>
+                </center>
+                
+                <div class="loader" id="poem-loader">
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                </div>
+                
+                <div class="output-container">
+                    <div class="output-header">
+                        <div class="output-title"><i class="fas fa-feather"></i> Your Generated Poem</div>
+                        <div class="action-buttons">
+                            <button class="copy-btn" id="copy-poem"><i class="fas fa-copy"></i> Copy</button>
+                            <button class="download-btn"><i class="fas fa-download"></i> Download</button>
+                            <button class="audio-btn" id="listen-poem"><i class="fas fa-volume-up"></i> Listen</button>
+                        </div>
+                    </div>
+                    <div class="output-content" id="poem-output">Your beautiful poem will appear here...</div>
+                    <button class="continue-btn" id="continue-poem"><i class="fas fa-plus"></i> Continue</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="monologue">
+                <h2 class="tab-title"><i class="fas fa-microphone"></i> Monologue Generator</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="monologue-character"><i class="fas fa-user"></i> Character Type</label>
+                        <input type="text" id="monologue-character" placeholder="e.g., a vengeful queen, a tired astronaut">
+                    </div>
+                    <div class="form-group">
+                        <label for="monologue-scenario"><i class="fas fa-theater-masks"></i> Scenario</label>
+                        <input type="text" id="monologue-scenario" placeholder="e.g., just before the battle, confessing a secret">
+                    </div>
+                    <div class="form-group">
+                        <label for="monologue-tone"><i class="fas fa-music"></i> Emotional Tone</label>
+                        <select id="monologue-tone">
+                            <option value="angry">Angry</option>
+                            <option value="sad">Sad</option>
+                            <option value="hopeful">Hopeful</option>
+                            <option value="desperate">Desperate</option>
+                            <option value="joyful">Joyful</option>
+                            <option value="reflective">Reflective</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="monologue-era"><i class="fas fa-history"></i> Era/Style</label>
+                        <select id="monologue-era">
+                            <option value="classical">Classical</option>
+                            <option value="shakespearean">Shakespearean</option>
+                            <option value="modern">Modern</option>
+                            <option value="film-noir">Film Noir</option>
+                            <option value="sci-fi">Sci-Fi</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="monologue-length"><i class="fas fa-ruler"></i> Length: <span id="monologue-length-value" class="slider-value">Medium</span></label>
+                    <div class="slider-container">
+                        <span>Short</span>
+                        <input type="range" id="monologue-length" min="1" max="3" value="2" step="1">
+                        <span>Long</span>
+                    </div>
+                </div>
+                
+                <div class="language-toggle">
+                    <span><i class="fas fa-globe"></i> Language: English</span>
+                    <label class="switch">
+                        <input type="checkbox" id="monologue-language">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Hindi <i class="fas fa-language"></i></span>
+                </div>
+                
+                <center>
+                    <button class="btn" id="generate-monologue"><i class="fas fa-theater-masks"></i> Write Monologue</button>
+                </center>
+                
+                <div class="loader" id="monologue-loader">
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                </div>
+                
+                <div class="output-container">
+                    <div class="output-header">
+                        <div class="output-title"><i class="fas fa-microphone"></i> Your Generated Monologue</div>
+                        <div class="action-buttons">
+                            <button class="copy-btn" id="copy-monologue"><i class="fas fa-copy"></i> Copy</button>
+                            <button class="download-btn"><i class="fas fa-download"></i> Download</button>
+                            <button class="audio-btn" id="listen-monologue"><i class="fas fa-volume-up"></i> Listen</button>
+                        </div>
+                    </div>
+                    <div class="output-content" id="monologue-output">Your dramatic monologue will appear here...</div>
+                    <button class="continue-btn" id="continue-monologue"><i class="fas fa-plus"></i> Continue</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="dialogue">
+                <h2 class="tab-title"><i class="fas fa-comments"></i> Dialogue Generator</h2>
+                <div class="form-grid">
+                    <div class="character-grid">
+                        <div class="form-group">
+                            <label for="dialogue-char1"><i class="fas fa-user"></i> Character 1</label>
+                            <input type="text" id="dialogue-char1" placeholder="e.g., a cynical detective">
+                        </div>
+                        <div class="form-group">
+                            <label for="dialogue-char2"><i class="fas fa-user"></i> Character 2</label>
+                            <input type="text" id="dialogue-char2" placeholder="e.g., a nervous witness">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dialogue-setting"><i class="fas fa-map-marker-alt"></i> Setting/Context</label>
+                        <input type="text" id="dialogue-setting" placeholder="e.g., in a rain-soaked alley, arguing about where to eat">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dialogue-exchanges"><i class="fas fa-exchange-alt"></i> Number of Exchanges</label>
+                        <select id="dialogue-exchanges">
+                            <option value="3">3 Exchanges</option>
+                            <option value="5">5 Exchanges</option>
+                            <option value="7">7 Exchanges</option>
+                            <option value="10">10 Exchanges</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dialogue-tone"><i class="fas fa-music"></i> Conversation Tone</label>
+                        <select id="dialogue-tone">
+                            <option value="tense">Tense</option>
+                            <option value="friendly">Friendly</option>
+                            <option value="romantic">Romantic</option>
+                            <option value="humorous">Humorous</option>
+                            <option value="serious">Serious</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="language-toggle">
+                    <span><i class="fas fa-globe"></i> Language: English</span>
+                    <label class="switch">
+                        <input type="checkbox" id="dialogue-language">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Hindi <i class="fas fa-language"></i></span>
+                </div>
+                
+                <center>
+                    <button class="btn" id="generate-dialogue"><i class="fas fa-comments"></i> Start Conversation</button>
+                </center>
+                
+                <div class="loader" id="dialogue-loader">
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                </div>
+                
+                <div class="output-container">
+                    <div class="output-header">
+                        <div class="output-title"><i class="fas fa-comments"></i> Your Generated Dialogue</div>
+                        <div class="action-buttons">
+                            <button class="copy-btn" id="copy-dialogue"><i class="fas fa-copy"></i> Copy</button>
+                            <button class="download-btn"><i class="fas fa-download"></i> Download</button>
+                            <button class="audio-btn" id="listen-dialogue"><i class="fas fa-volume-up"></i> Listen</button>
+                        </div>
+                    </div>
+                    <div class="output-content" id="dialogue-output">Your engaging dialogue will appear here...</div>
+                    <button class="continue-btn" id="continue-dialogue"><i class="fas fa-plus"></i> Continue</button>
+                </div>
+            </div>
+            
+            <div class="tab-content special-section" id="passions">
+                <h2 class="tab-title"><i class="fas fa-heart"></i> Blossoming Passions</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="passions-theme"><i class="fas fa-heart"></i> Theme/Topic</label>
+                        <input type="text" id="passions-theme" placeholder="e.g., forbidden desire, midnight encounter">
+                    </div>
+                    <div class="form-group">
+                        <label for="passions-intensity"><i class="fas fa-fire"></i> Intensity Level</label>
+                        <select id="passions-intensity">
+                            <option value="subtle">Subtle</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="passionate">Passionate</option>
+                            <option value="explicit">Explicit</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="passions-characters"><i class="fas fa-users"></i> Characters</label>
+                        <input type="text" id="passions-characters" placeholder="e.g., strangers, lovers reunited">
+                    </div>
+                    <div class="form-group">
+                        <label for="passions-setting"><i class="fas fa-moon"></i> Setting</label>
+                        <input type="text" id="passions-setting" placeholder="e.g., beach at midnight, luxurious hotel">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="passions-length"><i class="fas fa-ruler"></i> Length: <span id="passions-length-value" class="slider-value">Medium</span></label>
+                    <div class="slider-container">
+                        <span>Short</span>
+                        <input type="range" id="passions-length" min="1" max="3" value="2" step="1">
+                        <span>Long</span>
+                    </div>
+                </div>
+                
+                <div class="language-toggle">
+                    <span><i class="fas fa-globe"></i> Language: English</span>
+                    <label class="switch">
+                        <input type="checkbox" id="passions-language">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Hindi <i class="fas fa-language"></i></span>
+                </div>
+                
+                <center>
+                    <button class="btn" id="generate-passions"><i class="fas fa-fire"></i> Create Content</button>
+                </center>
+                
+                <div class="loader" id="passions-loader">
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                </div>
+                
+                <div class="output-container">
+                    <div class="output-header">
+                        <div class="output-title"><i class="fas fa-heart"></i> Your Generated Content</div>
+                        <div class="action-buttons">
+                            <button class="copy-btn" id="copy-passions"><i class="fas fa-copy"></i> Copy</button>
+                            <button class="download-btn"><i class="fas fa-download"></i> Download</button>
+                            <button class="audio-btn" id="listen-passions"><i class="fas fa-volume-up"></i> Listen</button>
+                        </div>
+                    </div>
+                    <div class="output-content" id="passions-output">Your passionate content will appear here...</div>
+                    <button class="continue-btn" id="continue-passions"><i class="fas fa-plus"></i> Continue</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="audio">
+                <h2 class="tab-title"><i class="fas fa-music"></i> Audio Library</h2>
+                <p>Listen to copyright-free recordings of famous poems, monologues, and dialogues for inspiration.</p>
+                
+                <div class="audio-library">
+                    <div class="audio-player">
+                        <div class="audio-title">"The Road Not Taken" by Robert Frost (Read by Leonard Charles)</div>
+                        <audio controls style="width: 100%">
+                            <source src="https://www.archive.org/download/road_not_taken_librivox/roadnottaken_64kb.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    
+                    <div class="audio-player">
+                        <div class="audio-title">"Sonnet 18" by William Shakespeare (Read by John Gonzalez)</div>
+                        <audio controls style="width: 100%">
+                            <source src="https://www.archive.org/download/sonnet_018_shakespeare_lb/sonnet018_shakespeare_lb_64kb.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    
+                    <div class="audio-player">
+                        <div class="audio-title">"If" by Rudyard Kipling (Read by Michael Scott)</div>
+                        <audio controls style="width: 100%">
+                            <source src="https://www.archive.org/download/if_kipling_mbs/if_kipling_mbs_64kb.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    
+                    <div class="audio-player">
+                        <div class="audio-title">"Ozymandias" by Percy Bysshe Shelley (Read by Leonard Wilson)</div>
+                        <audio controls style="width: 100%">
+                            <source src="https://www.archive.org/download/ozymandias_shelley_lw/ozymandias_shelley_lw_64kb.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    
+                    <div class="audio-player">
+                        <div class="audio-title">"The Raven" by Edgar Allan Poe (Excerpt) (Read by Michael Maggs)</div>
+                        <audio controls style="width: 100%">
+                            <source src="https://www.archive.org/download/the_raven_excerpt_poe_mm/the_raven_excerpt_poe_mm_64kb.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    
+                    <div class="audio-player">
+                        <div class="audio-title">"Hamlet's Soliloquy" by William Shakespeare (Read by John Gonzalez)</div>
+                        <audio controls style="width: 100%">
+                            <source src="https://www.archive.org/download/hamlet_act3_scene1_shakespeare_jg/hamlet_act3_scene1_shakespeare_jg_64kb.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Made with <span class="sunflower-icon"><i class="fas fa-sun"></i></span> by LoveSunflowers | Blossom Your Words with AI</p>
+        </div>
+    </div>
+    
+    <div class="settings-btn" id="settings-toggle">
+        <i class="fas fa-cog"></i>
+    </div>
+    
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-key"></i> API Settings</h2>
+            <div class="form-group">
+                <label for="api-key">Hugging Face API Key</label>
+                <input type="password" id="api-key" placeholder="Enter your API key">
+            </div>
+            <p>Get your free API key from <a href="https://huggingface.co" target="_blank" style="color: var(--dark-gold); font-weight: 600;">Hugging Face</a>.</p>
+            <center>
+                <button class="btn" id="save-settings"><i class="fas fa-save"></i> Save Settings</button>
+            </center>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+
+        // Tab switching functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                
+                // Update active tab button
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Update active tab content
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Settings modal functionality
+        const settingsToggle = document.getElementById('settings-toggle');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeModal = document.querySelector('.close-modal');
+        
+        settingsToggle.addEventListener('click', () => {
+            settingsModal.style.display = 'flex';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            settingsModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.style.display = 'none';
+            }
+        });
+        
+        // Save settings
+        document.getElementById('save-settings').addEventListener('click', () => {
+            const apiKey = document.getElementById('api-key').value;
+            if (apiKey) {
+                localStorage.setItem('hf_api_key', apiKey);
+                alert('API key saved successfully!');
+                settingsModal.style.display = 'none';
+            } else {
+                alert('Please enter a valid API key.');
+            }
+        });
+        
+        // Poem length slider
+        const poemLength = document.getElementById('poem-length');
+        const lengthValue = document.getElementById('length-value');
+        
+        poemLength.addEventListener('input', () => {
+            const values = ['Short', 'Medium', 'Long'];
+            lengthValue.textContent = values[poemLength.value - 1];
+        });
+        
+        // Monologue length slider
+        const monologueLength = document.getElementById('monologue-length');
+        const monologueLengthValue = document.getElementById('monologue-length-value');
+        
+        monologueLength.addEventListener('input', () => {
+            const values = ['Short', 'Medium', 'Long'];
+            monologueLengthValue.textContent = values[monologueLength.value - 1];
+        });
+        
+        // Passions length slider
+        const passionsLength = document.getElementById('passions-length');
+        const passionsLengthValue = document.getElementById('passions-length-value');
+        
+        passionsLength.addEventListener('input', () => {
+            const values = ['Short', 'Medium', 'Long'];
+            passionsLengthValue.textContent = values[passionsLength.value - 1];
+        });
+        
+        // Generate poem functionality
+        document.getElementById('generate-poem').addEventListener('click', () => {
+            const theme = document.getElementById('poem-theme').value;
+            const form = document.getElementById('poem-form').value;
+            const tone = document.getElementById('poem-tone').value;
+            const rhyme = document.getElementById('poem-rhyme').value;
+            const isHindi = document.getElementById('poem-language').checked;
+            const length = document.getElementById('poem-length').value;
+            
+            if (!theme) {
+                alert('Please enter a theme/topic for your poem.');
+                return;
+            }
+            
+            // Show loading animation
+            const loader = document.getElementById('poem-loader');
+            const output = document.getElementById('poem-output');
+            loader.style.display = 'block';
+            output.textContent = 'Crafting your beautiful poem...';
+            
+            // Simulate API call (in a real app, this would call Hugging Face API)
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // Sample poems based on inputs
+                let poem;
+                
+                if (isHindi) {
+                    poem = `वो ${theme} की बातें करते हैं,\nहम अपनी धूप में खिलते हैं।\n\nसुनहरे सूरज की किरणों सा,\nहमारा प्यार महकता है।\n\nखुशबू ${theme} की हवाओं में,\nहमेशा तुम्हारे पास रहती है।`;
+                } else if (form === 'haiku') {
+                    poem = `Golden sunflowers\nTurning their faces to light\n${theme} in their gaze`;
+                } else if (tone === 'romantic') {
+                    poem = `My love is like a sunflower,\nEver turning toward your light.\nIn your presence, I bloom,\nPetals unfurled in delight.\n\nYour ${theme} is the sun I seek,\nThe warmth that makes my spirit strong.\nIn the garden of my heart,\nIt's for you I've longed all along.`;
+                } else {
+                    poem = `Ode to ${theme}\n\nWhat can I say of ${theme},\nThat has not been said before?\nIt is the ${rhyme === 'non-rhyming' ? 'essence' : 'core'}\nOf life's ever-opening door.\n\nIn ${tone} tones we sing,\nOf ${theme} and all it brings.`;
+                }
+                
+                output.textContent = poem;
+            }, 2000);
+        });
+        
+        // Continue poem functionality
+        document.getElementById('continue-poem').addEventListener('click', () => {
+            const currentContent = document.getElementById('poem-output').textContent;
+            const loader = document.getElementById('poem-loader');
+            const output = document.getElementById('poem-output');
+            
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // Add more content to continue the poem
+                const additions = [
+                    "\n\nAnd so the story continues to unfold,\nWith petals of stories yet to be told.",
+                    "\n\nThrough days of sunshine and nights of rain,\nThe beauty of words will still remain.",
+                    "\n\nSo let your heart continue to sing,\nOf the joy and hope that words can bring."
+                ];
+                
+                const randomAddition = additions[Math.floor(Math.random() * additions.length)];
+                output.textContent = currentContent + randomAddition;
+            }, 1500);
+        });
+        
+        // Generate monologue functionality
+        document.getElementById('generate-monologue').addEventListener('click', () => {
+            const character = document.getElementById('monologue-character').value;
+            const scenario = document.getElementById('monologue-scenario').value;
+            const tone = document.getElementById('monologue-tone').value;
+            const era = document.getElementById('monologue-era').value;
+            const isHindi = document.getElementById('monologue-language').checked;
+            const length = document.getElementById('monologue-length').value;
+            
+            if (!character) {
+                alert('Please enter a character type for your monologue.');
+                return;
+            }
+            
+            // Show loading animation
+            const loader = document.getElementById('monologue-loader');
+            const output = document.getElementById('monologue-output');
+            loader.style.display = 'block';
+            output.textContent = 'Writing your dramatic monologue...';
+            
+            // Simulate API call
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // Sample monologue based on inputs
+                let monologue;
+                
+                if (isHindi) {
+                    monologue = `मैं ${character} हूं, ${scenario}।\n\nमेरे मन में इतने विचार हैं, इतनी भावनाएं हैं जो शब्दों में बांधना मुश्किल है।\n\nपर आज, इस पल में, मैं अपनी आत्मा की गहराई से बोलना चाहता हूं...`;
+                } else if (era === 'shakespearean') {
+                    monologue = `To be, or not to be: that is the question:\nWhether 'tis nobler in the mind to suffer\nThe slings and arrows of outrageous fortune,\nOr to take arms against a sea of troubles,\nAnd by opposing end them? To die: to sleep;\nNo more; and by a sleep to say we end\nThe heart-ache and the thousand natural shocks\nThat flesh is heir to, 'tis a consummation\nDevoutly to be wish'd. To die, to sleep;\nTo sleep: perchance to dream: ay, there's the rub;\nFor in that sleep of death what dreams may come\nWhen we have shuffled off this mortal coil,\nMust give us pause: there's the respect\nThat makes calamity of so long life;`;
+                } else {
+                    monologue = `I am ${character}, ${scenario}.\n\nI never thought it would come to this. The ${tone} feeling in my chest is almost too much to bear.\n\nYou see, it all started when...`;
+                }
+                
+                output.textContent = monologue;
+            }, 2000);
+        });
+        
+        // Continue monologue functionality
+        document.getElementById('continue-monologue').addEventListener('click', () => {
+            const currentContent = document.getElementById('monologue-output').textContent;
+            const loader = document.getElementById('monologue-loader');
+            const output = document.getElementById('monologue-output');
+            
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // Add more content to continue the monologue
+                const additions = [
+                    "\n\nAnd now, as I stand here before you, I realize that every choice I've made has led me to this moment.",
+                    "\n\nThe memories flood back like a river breaking through a dam, each one more vivid than the last.",
+                    "\n\nWhat I didn't know then, but understand now, is that our greatest battles are often fought within ourselves."
+                ];
+                
+                const randomAddition = additions[Math.floor(Math.random() * additions.length)];
+                output.textContent = currentContent + randomAddition;
+            }, 1500);
+        });
+        
+        // Generate dialogue functionality
+        document.getElementById('generate-dialogue').addEventListener('click', () => {
+            const char1 = document.getElementById('dialogue-char1').value || "Character 1";
+            const char2 = document.getElementById('dialogue-char2').value || "Character 2";
+            const setting = document.getElementById('dialogue-setting').value || "a mysterious location";
+            const exchanges = parseInt(document.getElementById('dialogue-exchanges').value) || 5;
+            const tone = document.getElementById('dialogue-tone').value;
+            const isHindi = document.getElementById('dialogue-language').checked;
+            
+            if (!char1 || !char2) {
+                alert('Please describe both characters for your dialogue.');
+                return;
+            }
+            
+            // Show loading animation
+            const loader = document.getElementById('dialogue-loader');
+            const output = document.getElementById('dialogue-output');
+            loader.style.display = 'block';
+            output.textContent = 'Creating your engaging dialogue...';
+            
+            // Simulate API call
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // Sample dialogue based on inputs
+                let dialogue = "";
+                
+                if (isHindi) {
+                    dialogue = `${char1}: तुम यहां क्या कर रहे हो?\n\n${char2}: मैं तो बस... तुम्हें देखने आया था।\n\n${char1}: पर तुम्हें पता है यह खतरनाक हो सकता है!\n\n${char2}: प्यार के आगे सभी खतरे छोटे हैं।`;
+                } else if (tone === 'romantic') {
+                    dialogue = `${char1}: I never expected to find you here, of all places.\n\n${char2}: Sometimes the heart leads us to unexpected destinations.\n\n${char1}: Do you believe in fate? In meant-to-be?\n\n${char2}: I believe we create our own fate through the choices we make.`;
+                } else if (tone === 'humorous') {
+                    dialogue = `${char1}: So let me get this straight. You thought it was a good idea to...\n\n${char2}: In my defense, it seemed much more reasonable at the time!\n\n${char1}: Reasonable? You tried to microwave a metal spoon!\n\n${char2}: I was hungry and in a hurry!`;
+                } else {
+                    for (let i = 0; i < exchanges; i++) {
+                        dialogue += `${char1}: This is exchange number ${i+1} between us.\n\n`;
+                        dialogue += `${char2}: And I'm responding to what you just said.\n\n`;
+                    }
+                }
+                
+                output.textContent = dialogue;
+            }, 2000);
+        });
+        
+        // Continue dialogue functionality
+        document.getElementById('continue-dialogue').addEventListener('click', () => {
+            const currentContent = document.getElementById('dialogue-output').textContent;
+            const loader = document.getElementById('dialogue-loader');
+            const output = document.getElementById('dialogue-output');
+            
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // Add more content to continue the dialogue
+                const char1 = document.getElementById('dialogue-char1').value || "Character 1";
+                const char2 = document.getElementById('dialogue-char2').value || "Character 2";
+                
+                const additions = [
+                    `\n\n${char1}: But what happens now? Where do we go from here?\n\n${char2}: Forward, always forward. There's no other direction worth taking.`,
+                    `\n\n${char1}: I never thought I'd be having this conversation.\n\n${char2}: The best conversations are often the ones we never expect.`,
+                    `\n\n${char1}: There's so much more I want to say.\n\n${char2}: Then say it. We have all the time in the world.`
+                ];
+                
+                const randomAddition = additions[Math.floor(Math.random() * additions.length)];
+                output.textContent = currentContent + randomAddition;
+            }, 1500);
+        });
+        
+        // Generate passions functionality
+        document.getElementById('generate-passions').addEventListener('click', () => {
+            const theme = document.getElementById('passions-theme').value || "forbidden desire";
+            const intensity = document.getElementById('passions-intensity').value;
+            const characters = document.getElementById('passions-characters').value || "two lovers";
+            const setting = document.getElementById('passions-setting').value || "a moonlit garden";
+            const isHindi = document.getElementById('passions-language').checked;
+            
+            if (!theme) {
+                alert('Please enter a theme for your content.');
+                return;
+            }
+            
+            // Show loading animation
+            const loader = document.getElementById('passions-loader');
+            const output = document.getElementById('passions-output');
+            loader.style.display = 'block';
+            output.textContent = 'Crafting your passionate content...';
+            
+            // Simulate API call
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // Sample content based on inputs
+                let content;
+                
+                if (isHindi) {
+                    content = `वह ${setting} में खड़ी थी, उसकी आँखों में ${theme} की चिंगारी थी।\n\nउसके होंठों पर एक रहस्यमयी मुस्कान थी, जो उसके मन की गहरी इच्छाओं को छुपा रही थी।\n\nवह जानती थी कि यह ${intensity} पल उनके जीवन का सबसे यादगार पल बनने वाला है।`;
+                } else if (intensity === 'subtle') {
+                    content = `In the quiet of ${setting}, ${characters} found themselves drawn together.\n\nTheir eyes met across the room, speaking volumes without a single word uttered.\n\nThere was an electricity in the air, a subtle tension that promised more than either dared to express aloud.`;
+                } else if (intensity === 'explicit') {
+                    content = `The ${setting} became their sanctuary, a place where ${characters} could explore the depths of their ${theme}.\n\nEvery touch was electric, every glance filled with unspoken promises.\n\nIn each other's arms, they found a passion that consumed them completely, leaving no room for hesitation or doubt.`;
+                } else {
+                    content = `The ${theme} between ${characters} grew stronger in the ${setting}.\n\nWith every passing moment, their connection deepened, fueled by a ${intensity} passion that neither could deny.\n\nWhat started as a simple attraction had blossomed into something profound and unforgettable.`;
+                }
+                
+                output.textContent = content;
+            }, 2000);
+        });
+        
+        // Continue passions functionality
+        document.getElementById('continue-passions').addEventListener('click', () => {
+            const currentContent = document.getElementById('passions-output').textContent;
+            const loader = document.getElementById('passions-loader');
+            const output = document.getElementById('passions-output');
+            
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // Add more content to continue the passionate content
+                const additions = [
+                    "\n\nIn the stillness that followed, they discovered that some connections transcend words, existing in the space between heartbeats.",
+                    "\n\nAs the night deepened, so did their intimacy, each moment stretching into eternity yet passing too quickly.",
+                    "\n\nThey knew this was just the beginning of a story that would be written in the stars, a tale of passion that would be told for generations."
+                ];
+                
+                const randomAddition = additions[Math.floor(Math.random() * additions.length)];
+                output.textContent = currentContent + randomAddition;
+            }, 1500);
+        });
+        
+        // Copy to clipboard functionality
+        const setupCopyButton = (buttonId, outputId) => {
+            document.getElementById(buttonId).addEventListener('click', () => {
+                const text = document.getElementById(outputId).textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    const copyBtn = document.getElementById(buttonId);
+                    const originalHtml = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalHtml;
+                    }, 2000);
+                });
+            });
+        };
+        
+        setupCopyButton('copy-poem', 'poem-output');
+        setupCopyButton('copy-monologue', 'monologue-output');
+        setupCopyButton('copy-dialogue', 'dialogue-output');
+        setupCopyButton('copy-passions', 'passions-output');
+        
+        // Audio functionality
+        const setupAudioButton = (buttonId, outputId) => {
+            document.getElementById(buttonId).addEventListener('click', () => {
+                const text = document.getElementById(outputId).textContent;
+                alert('In a full implementation, this would use text-to-speech to read the content. For now, enjoy the sample audio in the Audio Library tab.');
+            });
+        };
+        
+        setupAudioButton('listen-poem', 'poem-output');
+        setupAudioButton('listen-monologue', 'monologue-output');
+        setupAudioButton('listen-dialogue', 'dialogue-output');
+        setupAudioButton('listen-passions', 'passions-output');
+        
+        // Check for saved API key
+        const savedApiKey = localStorage.getItem('hf_api_key');
+        if (savedApiKey) {
+            document.getElementById('api-key').value = savedApiKey;
+        }
+    </script>
+</body>
+</html>
